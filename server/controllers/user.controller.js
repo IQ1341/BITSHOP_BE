@@ -157,7 +157,7 @@ import generatedRefreshToken from "../utils/generatedRefreshToken.js";
 
  export async function logOutController(request,response) {
     try {
-
+        const userId = request.userId
         const cookiesOption = {
             httpOnly : true,
             secure : true,
@@ -165,11 +165,27 @@ import generatedRefreshToken from "../utils/generatedRefreshToken.js";
         }
         response.clearCookie("accessToken",cookiesOption)
         response.clearCookie("refreshToken",cookiesOption)
+
+        const removeRefreshToken = await UserModel.findByIdAndUpdate(userId,{
+            refresh_token : ""
+        })
         return response.json({
             message : "Berhasil LogOut",
             erro : false,
             success : true
         })
+    } catch (error) {
+        return response.status(500).json({
+            message : error.message || error,
+            error : true,
+            success : false
+        })
+    }
+ }
+
+ export async function uploadAvatar(request,response) {
+    try {
+        
     } catch (error) {
         return response.status(500).json({
             message : error.message || error,
