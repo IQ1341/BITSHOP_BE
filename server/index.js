@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import connectDB from './config/connectDB.js';
+import userRouter from './route/user.route.js';
 
 dotenv.config();
 
@@ -30,7 +31,7 @@ const PORT = process.env.PORT || 8080;
 app.get("/", (req, res) => {
     res.json({ message: "Server is running" });
 });
-
+app.use('/api/user',userRouter)
 // Koneksi ke database & Jalankan server
 connectDB()
     .then(() => {
