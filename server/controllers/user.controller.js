@@ -4,6 +4,8 @@ import bcryptjs from "bcryptjs"
 import verifyEmailTemplate from "../utils/verifyEmailTemplate.js";
 import generatedAccessToken from "../utils/generatedAccessToken.js";
 import generatedRefreshToken from "../utils/generatedRefreshToken.js";
+import uploadImageCloudinary from "../utils/uploadImageCloudinary.js";
+
 
  export async function registerUserController(request,response) {
     try {
@@ -185,7 +187,21 @@ import generatedRefreshToken from "../utils/generatedRefreshToken.js";
 
  export async function uploadAvatar(request,response) {
     try {
-        
+        const userId = request.userId
+        const image = request.file
+
+        const upload = await uploadImageCloudinary(image)
+        const updateUser = await UserModel.findByIdAndUpdate(userId,{
+            avatar : upload.url
+        })
+
+        return response.json({
+            message : "Upload Profil",
+            data : {
+                _id : userId,
+                avatar : upload.url
+            }
+        })
     } catch (error) {
         return response.status(500).json({
             message : error.message || error,
